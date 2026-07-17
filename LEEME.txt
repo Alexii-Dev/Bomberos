@@ -1,0 +1,38 @@
+SPLECTRON — DEMOSTRACIÓN LOCAL COMPLETA
+
+CONTENIDO
+- index.html: página principal.
+- styles.css: diseño, colores y modo claro/oscuro.
+- app.js: funcionamiento de la demostración local.
+- assets/: logos oficiales de SPLECTRON.
+
+CÓMO ABRIR
+1. Descomprima el ZIP completo.
+2. Entre a la carpeta SPLECTRON_demo_local_completa.
+3. Abra index.html con Google Chrome o Microsoft Edge.
+
+RECORRIDO RECOMENDADO PARA LA PRESENTACIÓN
+1. En Central, complete o revise los datos de la emergencia.
+2. Presione “Continuar a despacho”.
+3. Revise la unidad sugerida y presione “Despachar B-1”.
+4. Abra el Panel Operacional para revisar el incidente.
+5. Ingrese a Cuartel para asignar OBAC y maquinista.
+6. Revise la pantalla de Confirmación.
+7. Use el botón de tema para mostrar el modo claro y oscuro.
+8. Use “Reiniciar” para comenzar nuevamente la demostración.
+
+FUNCIONES LOCALES
+- Registro demostrativo de una emergencia.
+- Flujo hacia despacho y confirmación.
+- Actualización del panel operacional.
+- Disponibilidad del cuartel.
+- Asignación de OBAC y maquinista.
+- Historial local de acciones.
+- Modo claro y oscuro.
+- Persistencia temporal mediante localStorage.
+
+IMPORTANTE
+- Es una demostración visual local.
+- No incluye servidor, API ni base de datos real.
+- No se conecta con mapas, WhatsApp, tonos u otros servicios reales.
+- No debe utilizarse para gestionar emergencias reales.

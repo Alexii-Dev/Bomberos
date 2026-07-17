@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="SPLECTRON — Demostración local de gestión de emergencias y despacho." />
+  <title>SPLECTRON — Central de Alarmas</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#central" aria-label="Ir a Central de Alarmas">
+        <span class="brand-logo-wrap"><img src="assets/splectron-mark.png" alt="" /></span>
+        <span class="brand-copy">
+          <strong>SPLECTRON</strong>
+          <small>Powered by Spectro</small>
+        </span>
+      </a>
+
+      <nav class="primary-nav" aria-label="Módulos principales">
+        <a href="#central" data-route="central">Central</a>
+        <a href="#operacional" data-route="operacional">Operacional</a>
+        <a href="#despacho" data-route="despacho">Despacho</a>
+        <a href="#cuartel" data-route="cuartel">Cuartel</a>
+        <a href="#confirmacion" data-route="confirmacion">Confirmación</a>
+      </nav>
+
+      <div class="top-actions">
+        <span class="demo-badge"><i></i> Demo local</span>
+        <button class="header-button" id="theme-toggle" type="button" aria-label="Cambiar tema">
+          <svg class="theme-icon theme-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="theme-icon theme-moon" viewBox="0 0 24 24"><path d="M20 15.5A8 8 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></svg>
+          <span id="theme-label">Oscuro</span>
+        </button>
+        <button class="header-button reset-button" id="reset-demo" type="button">Reiniciar</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- CENTRAL -->
+      <section class="screen" data-screen="central" id="screen-central">
+        <div class="page-heading">
+          <div>
+            <span class="eyebrow">Central de alarmas</span>
+            <h1>Registrar emergencia</h1>
+            <p>Ingrese los datos principales. El resto podrá completarse durante el despacho.</p>
+          </div>
+          <div class="time-panel">
+            <span>Hora actual</span>
+            <strong id="clock">--:--</strong>
+          </div>
+        </div>
+
+        <div class="central-grid">
+          <form class="panel emergency-form" id="emergency-form">
+            <div class="panel-title">
+              <div>
+                <span class="title-number">1</span>
+                <div><strong>Información de la llamada</strong><small>Campos principales para iniciar el evento</small></div>
+              </div>
+              <span class="required-label">* Obligatorio</span>
+            </div>
+
+            <div class="field-grid">
+              <label class="field full">
+                <span>Tipo de emergencia *</span>
+                <select id="incident-type" required>
+                  <option>Incendio estructural</option>
+                  <option>Rescate vehicular</option>
+                  <option>Rescate de persona</option>
+                  <option>Materiales peligrosos</option>
+                  <option>Apoyo a otro organismo</option>
+                </select>
+              </label>
+
+              <label class="field full">
+                <span>Dirección *</span>
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 21s6-5.6 6-11A6 6 0 1 0 6 10c0 5.4 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+                  <input id="incident-address" value="Av. Providencia 1234, Providencia" required />
+                </div>
+              </label>
+
+              <label class="field full">
+                <span>Referencia</span>
+                <input id="incident-reference" value="Humo visible desde un departamento, piso 7" />
+              </label>
+
+              <label class="field">
+                <span>Persona que informa *</span>
+                <input id="caller-name" value="María González" required />
+              </label>
+
+              <label class="field">
+                <span>Teléfono</span>
+                <input id="caller-phone" value="+56 9 1234 5678" />
+              </label>
+            </div>
+
+            <div class="form-note">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+              <span>Esta demostración funciona de manera local y no envía datos reales.</span>
+            </div>
+
+            <button class="primary-action" type="submit">
+              Continuar a despacho
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+            </button>
+          </form>
+
+          <section class="panel map-panel" aria-label="Mapa de ubicación">
+            <div class="panel-title map-title">
+              <div>
+                <span class="title-number">2</span>
+                <div><strong>Ubicación del incidente</strong><small id="map-address">Av. Providencia 1234, Providencia</small></div>
+              </div>
+              <button class="secondary-button" type="button" id="center-map">Centrar mapa</button>
+            </div>
+
+            <div class="map-canvas" id="map-canvas" aria-hidden="true">
+              <span class="block b1"></span><span class="block b2"></span><span class="block b3"></span><span class="block b4"></span>
+              <span class="road h1"></span><span class="road h2"></span><span class="road h3"></span>
+              <span class="road v1"></span><span class="road v2"></span><span class="road v3"></span>
+              <span class="road diagonal"></span>
+              <span class="map-label ml1">PROVIDENCIA</span>
+              <span class="map-label ml2">Av. Providencia</span>
+              <span class="map-label ml3">Manuel Montt</span>
+              <span class="incident-marker"><i></i><b>Incidente</b></span>
+              <span class="route-line"></span>
+              <span class="station-marker"><b>1ª</b><small>3 min</small></span>
+            </div>
+
+            <div class="map-footer">
+              <div><span>Unidad sugerida</span><strong>B-1 · Primera Compañía</strong></div>
+              <div><span>Tiempo estimado</span><strong class="accent-text">3 min 40 s</strong></div>
+              <div><span>Distancia</span><strong>1,8 km</strong></div>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel stations-panel">
+          <div class="simple-heading">
+            <div><span class="eyebrow">Disponibilidad</span><h2>Cuarteles cercanos</h2></div>
+            <span class="updated">Actualizado ahora</span>
+          </div>
+          <div class="stations-table" role="table" aria-label="Cuarteles cercanos">
+            <div class="station-row station-head" role="row"><span>Cuartel</span><span>Estado</span><span>Dotación</span><span>Unidad</span><span>Tiempo</span></div>
+            <div class="station-row selected" role="row"><strong>Primera Compañía</strong><span class="status available"><i></i>Disponible</span><span><b>8</b> voluntarios</span><span>B-1</span><strong class="accent-text">3:40</strong></div>
+            <div class="station-row" role="row"><strong>Tercera Compañía</strong><span class="status available"><i></i>Disponible</span><span><b>6</b> voluntarios</span><span>B-3</span><strong>6:10</strong></div>
+            <div class="station-row" role="row"><strong>Sexta Compañía</strong><span class="status busy"><i></i>En servicio</span><span><b>3</b> voluntarios</span><span>RX-6</span><strong>9:20</strong></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- OPERACIONAL -->
+      <section class="screen" data-screen="operacional" id="screen-operacional">
+        <div class="page-heading">
+          <div><span class="eyebrow">Panel operacional</span><h1>Estado general</h1><p>Resumen simple de incidentes, unidades y cuarteles.</p></div>
+          <div class="heading-actions"><button class="secondary-button" id="refresh-operational" type="button">Actualizar</button></div>
+        </div>
+
+        <div class="stat-grid">
+          <article class="stat-card"><span>Incidentes activos</span><strong id="stat-incidents">1</strong><small>En seguimiento</small></article>
+          <article class="stat-card"><span>Unidades disponibles</span><strong>12</strong><small>En todos los cuarteles</small></article>
+          <article class="stat-card"><span>Cuarteles operativos</span><strong>7</strong><small>De 8 registrados</small></article>
+        </div>
+
+        <div class="operational-grid">
+          <section class="panel operation-map-panel">
+            <div class="simple-heading"><div><span class="eyebrow">Mapa</span><h2>Incidentes activos</h2></div><span class="legend"><i></i> Incidente</span></div>
+            <div class="map-canvas operation-map" aria-hidden="true">
+              <span class="block b1"></span><span class="block b2"></span><span class="block b3"></span><span class="block b4"></span>
+              <span class="road h1"></span><span class="road h2"></span><span class="road h3"></span>
+              <span class="road v1"></span><span class="road v2"></span><span class="road v3"></span>
+              <span class="road diagonal"></span>
+              <span class="incident-marker op-marker"><i></i><b id="operation-marker-label">Incidente 10-0-1</b></span>
+              <span class="station-marker op-station"><b>1ª</b><small>B-1</small></span>
+            </div>
+          </section>
+
+          <section class="panel incident-list-panel">
+            <div class="simple-heading"><div><span class="eyebrow">Prioridad</span><h2>Eventos recientes</h2></div></div>
+            <div id="incident-list" class="incident-list"></div>
+          </section>
+        </div>
+
+        <section class="panel activity-panel">
+          <div class="simple-heading"><div><span class="eyebrow">Historial</span><h2>Actividad de la demostración</h2></div></div>
+          <div class="activity-list" id="activity-list"></div>
+        </section>
+      </section>
+
+      <!-- DESPACHO -->
+      <section class="screen" data-screen="despacho" id="screen-despacho">
+        <div class="page-heading">
+          <div><span class="eyebrow">Despacho</span><h1>Revisar y confirmar</h1><p>Compruebe la emergencia y la unidad sugerida antes de despachar.</p></div>
+          <div class="dispatch-clock"><span>Tiempo transcurrido</span><strong id="dispatch-timer">00:00</strong></div>
+        </div>
+
+        <div class="dispatch-grid">
+          <section class="panel dispatch-summary">
+            <div class="simple-heading"><div><span class="eyebrow">Emergencia</span><h2 id="dispatch-type">Incendio estructural</h2></div><span class="priority-pill">Prioridad alta</span></div>
+            <dl class="detail-list">
+              <div><dt>Dirección</dt><dd id="dispatch-address">Av. Providencia 1234, Providencia</dd></div>
+              <div><dt>Referencia</dt><dd id="dispatch-reference">Humo visible desde un departamento, piso 7</dd></div>
+              <div><dt>Informante</dt><dd id="dispatch-caller">María González</dd></div>
+            </dl>
+          </section>
+
+          <section class="panel recommended-unit">
+            <span class="eyebrow">Unidad recomendada</span>
+            <div class="unit-code">B-1</div>
+            <h2>Primera Compañía</h2>
+            <p>Es la unidad disponible con menor tiempo estimado de llegada.</p>
+            <div class="unit-metrics"><div><span>Dotación</span><strong>8</strong></div><div><span>Distancia</span><strong>1,8 km</strong></div><div><span>Llegada</span><strong>3:40</strong></div></div>
+          </section>
+
+          <section class="panel dispatch-action-panel">
+            <span class="eyebrow">Protocolo</span>
+            <label class="field"><span>Respuesta inicial</span><select id="dispatch-protocol"><option>1 bomba + 1 escala</option><option>2 bombas + 1 escala</option><option>Despacho manual</option></select></label>
+            <div class="dispatch-warning"><svg viewBox="0 0 24 24"><path d="M12 3 22 20H2L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg><span>Al confirmar se registrará el despacho en esta demostración local.</span></div>
+            <button class="primary-action large-action" id="dispatch-button" type="button">Despachar B-1<svg viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button>
+            <button class="link-button" data-go="central" type="button">Volver y corregir datos</button>
+          </section>
+        </div>
+      </section>
+
+      <!-- CUARTEL -->
+      <section class="screen" data-screen="cuartel" id="screen-cuartel">
+        <div class="active-alert" id="station-alert"><i></i><span><strong>Sin despacho pendiente</strong><small>El cuartel se encuentra disponible.</small></span></div>
+        <div class="page-heading">
+          <div><span class="eyebrow">Plataforma de cuartel</span><h1>Primera Compañía</h1><p>Estado de disponibilidad y preparación de la salida.</p></div>
+          <label class="availability-switch"><span><strong>Cuartel operativo</strong><small>Recibir nuevos despachos</small></span><input type="checkbox" id="station-toggle" checked><i></i></label>
+        </div>
+
+        <div class="station-grid">
+          <section class="panel volunteer-panel">
+            <div class="simple-heading"><div><span class="eyebrow">Dotación</span><h2><b>8</b> voluntarios disponibles</h2></div></div>
+            <div class="volunteer-list">
+              <div><span class="person-dot available"></span><strong>Camila Rojas</strong><small>Disponible</small></div>
+              <div><span class="person-dot available"></span><strong>Matías Herrera</strong><small>Disponible</small></div>
+              <div><span class="person-dot available"></span><strong>Javiera Soto</strong><small>Disponible</small></div>
+              <div><span class="person-dot available"></span><strong>Felipe Muñoz</strong><small>Disponible</small></div>
+              <div><span class="person-dot busy"></span><strong>Diego Contreras</strong><small>En servicio</small></div>
+            </div>
+          </section>
+
+          <section class="panel assignment-panel">
+            <div class="simple-heading"><div><span class="eyebrow">Salida</span><h2>Asignar responsables</h2></div></div>
+            <label class="field"><span>OBAC</span><select id="obac-select"><option>Camila Rojas</option><option>Matías Herrera</option><option>Javiera Soto</option></select></label>
+            <label class="field"><span>Maquinista</span><select id="driver-select"><option>Felipe Muñoz</option><option>Matías Herrera</option><option>Javiera Soto</option></select></label>
+            <label class="field"><span>Unidad</span><select><option>B-1 · Bomba</option></select></label>
+            <button class="primary-action" id="confirm-departure" type="button">Confirmar salida<svg viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button>
+          </section>
+        </div>
+      </section>
+
+      <!-- CONFIRMACIÓN -->
+      <section class="screen" data-screen="confirmacion" id="screen-confirmacion">
+        <div class="confirmation-card panel">
+          <span class="success-mark"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+          <span class="eyebrow">Confirmación</span>
+          <h1>Despacho registrado</h1>
+          <p id="confirmation-message">La Primera Compañía fue asignada correctamente.</p>
+
+          <div class="confirmation-list">
+            <div><span class="small-check">✓</span><span><strong>Cuartel notificado</strong><small>Primera Compañía</small></span><time>Ahora</time></div>
+            <div><span class="small-check">✓</span><span><strong>Panel actualizado</strong><small>Incidente visible en operación</small></span><time>Ahora</time></div>
+            <div><span class="small-check">✓</span><span><strong>Registro local guardado</strong><small>Solo en este navegador</small></span><time>Ahora</time></div>
+          </div>
+
+          <div class="confirmation-actions">
+            <button class="secondary-button" data-go="operacional" type="button">Ver panel operacional</button>
+            <button class="primary-action" id="new-incident" type="button">Registrar otra emergencia<svg viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"><span class="small-check">✓</span><span><strong>Acción completada</strong><small>La demostración fue actualizada.</small></span><button type="button" aria-label="Cerrar">×</button></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
